@@ -33,7 +33,7 @@ func handleLs() {
 		return
 	}
 
-	fmt.Println("Here are you list of todos:")
+	fmt.Println("TODO list:")
 	for i, todo := range todos {
 		fmt.Printf("%d. %s\n", i+1, todo.Value)
 	}

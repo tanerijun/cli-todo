@@ -2,9 +2,11 @@ package cmd
 
 import (
 	"fmt"
+	"os"
 	"strings"
 
 	"github.com/spf13/cobra"
+	"github.com/tanerijun/cli-todo/db"
 )
 
 // addCmd represents the add command
@@ -24,5 +26,10 @@ func init() {
 }
 
 func handleAdd(todo string) {
-	fmt.Println("TODO:", todo)
+	_, err := db.CreateTodo(todo)
+	if err != nil {
+		fmt.Println("Error adding todo:", err)
+		os.Exit(1)
+	}
+	fmt.Printf("Added \"%s\" to TODO list.\n", todo)
 }
