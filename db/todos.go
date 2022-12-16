@@ -47,8 +47,28 @@ func CreateTodo(todo string) (int, error) {
 	if err != nil {
 		return 0, err
 	}
-
 	return id, nil
+}
+
+// AllTodos return all todos inside the DB.
+func AllTodos() ([]Todo, error) {
+	var todos []Todo
+	err := db.View(func(tx *bolt.Tx) error {
+		b := tx.Bucket(todosBucket)
+		// Iterate over keys
+		c := b.Cursor()
+		for k, v := c.First(); k != nil; k, v = c.Next() {
+			todos = append(todos, Todo{
+				Key:   btoi(k),
+				Value: string(v),
+			})
+		}
+		return nil
+	})
+	if err != nil {
+		return nil, err
+	}
+	return todos, nil
 }
 
 // itob returns an 8-byte big endian representation of v.
