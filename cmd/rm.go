@@ -2,9 +2,11 @@ package cmd
 
 import (
 	"fmt"
+	"os"
 	"strconv"
 
 	"github.com/spf13/cobra"
+	"github.com/tanerijun/cli-todo/db"
 )
 
 // rmCmd represents the rm command
@@ -32,5 +34,23 @@ func init() {
 }
 
 func handleRemove(ids []int) {
-	fmt.Println(ids)
+	todos, err := db.AllTodos()
+	if err != nil {
+		fmt.Println("Error reading from database:", err)
+		os.Exit(1)
+	}
+
+	for _, id := range ids {
+		if id <= 0 || id > len(todos) {
+			fmt.Println("Invalid todo's id:", id)
+			continue
+		}
+		todo := todos[id-1]
+		err := db.DeleteTodos(todo.Key)
+		if err != nil {
+			fmt.Printf("Error removing todo \"%d\": %s\n", id, err)
+			continue
+		}
+		fmt.Printf("Removed \"%d\"\n", id)
+	}
 }
