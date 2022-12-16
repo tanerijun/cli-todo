@@ -1,7 +1,7 @@
 package main
 
 import (
-	"log"
+	"fmt"
 	"os"
 	"path/filepath"
 
@@ -17,18 +17,21 @@ func main() {
 func setupDB() {
 	home, err := os.UserHomeDir()
 	if err != nil {
-		log.Fatal(err)
+		fmt.Println("Error setting up database:", err)
+		os.Exit(1)
 	}
 
 	dirPath := filepath.Join(home, ".todos")
 	err = os.Mkdir(dirPath, 0755)
 	if err != nil && !os.IsExist(err) {
-		log.Fatal(err)
+		fmt.Println("Error setting up database:", err)
+		os.Exit(1)
 	}
 
 	dbPath := filepath.Join(dirPath, "todos.db")
 	err = db.Init(dbPath)
 	if err != nil {
-		log.Fatal(err)
+		fmt.Println("Error setting up database:", err)
+		os.Exit(1)
 	}
 }
